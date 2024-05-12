@@ -1,57 +1,58 @@
 import React from 'react'
 import ProfilePicture from './components/profile-picture'
 import ProfileForm from '@/components/forms/profile-form'
+import { currentUser } from '@clerk/nextjs/server'
+import { db } from '@/lib/db'
 
 type Props = {}
 
-function Settings({}: Props) {
-  //   const authUser = await currentUser()
-  //   if (!authUser) return null
+async function Settings({}: Props) {
+  const authUser = await currentUser()
+  if (!authUser) return null
 
-  const user = { profileImage: null } // await db.user.findUnique({ where: { clerkId: authUser.id } })
+  const user = await db.user.findUnique({ where: { clerkId: authUser.id } })
   const removeProfileImage = async () => {
     'use server'
-    // const response = await db.user.update({
-    //   where: {
-    //     clerkId: authUser.id,
-    //   },
-    //   data: {
-    //     profileImage: '',
-    //   },
-    // })
-    // return response
-    return null
+    const response = await db.user.update({
+      where: {
+        clerkId: authUser.id,
+      },
+      data: {
+        profileImage: '',
+      },
+    })
+    return response
   }
 
   const uploadProfileImage = async (image: string) => {
     'use server'
-    // const id = authUser.id
-    // const response = await db.user.update({
-    //   where: {
-    //     clerkId: id,
-    //   },
-    //   data: {
-    //     profileImage: image,
-    //   },
-    // })
+    console.log('image', image)
+    const id = authUser.id
+    console.log('id', id)
+    const response = await db.user.update({
+      where: {
+        clerkId: id,
+      },
+      data: {
+        profileImage: image,
+      },
+    })
 
-    // return response
-    return null
+    return response
   }
 
   const updateUserInfo = async (name: string) => {
     'use server'
 
-    // const updateUser = await db.user.update({
-    //   where: {
-    //     clerkId: authUser.id,
-    //   },
-    //   data: {
-    //     name,
-    //   },
-    // })
-    // return updateUser
-    return null
+    const updateUser = await db.user.update({
+      where: {
+        clerkId: authUser.id,
+      },
+      data: {
+        name,
+      },
+    })
+    return updateUser
   }
 
   return (
